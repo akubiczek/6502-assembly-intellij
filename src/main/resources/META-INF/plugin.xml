@@ -14,13 +14,11 @@
   </change-notes>
 
   <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
-  <idea-version since-build="203.0"/>
+  <idea-version since-build="243.0"/>
 
   <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
        on how to target different products -->
   <depends>com.intellij.modules.platform</depends>
-  
-  <incompatible-with>com.intellij.modules.clion</incompatible-with>
 
   <extensions defaultExtensionNs="com.intellij">
     <fileType name="Assembly file" implementationClass="org.ca65.AsmFileType" fieldName="INSTANCE"
@@ -49,7 +47,6 @@
     <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmUnresolvedReferenceAnnotator"/>
     <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmUnusedReferenceAnnotator"/>
     <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmNumericLiteralAnnotator"/>
-    <projectTemplate projectType="6502 Assembly" templatePath="projectTemplates/Generic 6502 Project.zip" category="true"/>
     <projectService serviceImplementation="org.ca65.config.AsmConfiguration" />
 
     <intentionAction>

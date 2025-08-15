@@ -1,66 +1,67 @@
 plugins {
     id 'java'
-    id "org.jetbrains.intellij" version "1.1.3"
-    id "org.jetbrains.grammarkit" version "2021.1.3"
+    id "org.jetbrains.intellij.platform" version "2.7.1"
+    id "org.jetbrains.grammarkit" version "2022.3.2.2"
 }
 
 apply plugin: 'org.jetbrains.grammarkit'
 import org.jetbrains.grammarkit.tasks.*
 
 group 'org.ca65'
-version '1.7'
-sourceCompatibility = 11
+version '1.8'
+sourceCompatibility = 17
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 sourceSets {
     main {
         java {
-            srcDirs = ['src/main/java', 'src/main/gen']
+            srcDirs = ['src/main/java', 'build/gen']
         }
     }
 }
 
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
+    
+    intellijPlatform {
+        create('IC', '2024.3.1')
+        
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+    }
 }
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
-intellij {
-    version = '2021.3'
-    updateSinceUntilBuild = false
-}
-
-runPluginVerifier {
-    ideVersions = ['IC-2021.3.1', 'CL-2021.3.2']
-}
-
-patchPluginXml {
-    changeNotes = """This version adds a code formatter for 6502 assembly files.
+// IntelliJ Platform Configuration
+intellijPlatform {
+    pluginConfiguration {
+        changeNotes = """This version adds a code formatter for 6502 assembly files.
 
 This release also corrects an issue where square brackets, as used in some 65C816 long addressing modes, were being treated as a syntax error.
 
 Line markers for branch instructions have been improved. 65C186 branch instructions are now recognised, and the plugin can now identify branches to unnamed labels, which are indicated with a different icon. Lastly, this version corrects a bug which prevented these line markers from appearing."""
-    sinceBuild = '211.6693'
+    }
+    
+    pluginVerification {
+        ides {
+            recommended()
+        }
+    }
 }
 
-runIde {
-   debugOptions {
-       enabled = true
-       port = 5005
-       server = true
-       suspend = false
-   }
-}
-
-task generateAsmParser(type: GenerateParser) {
+// Grammar Kit tasks
+task generateAsmParser(type: GenerateParserTask) {
     // source bnf file
-    source = "src/main/java/org/ca65/Asm.bnf"
+    sourceFile = project.file("src/main/java/org/ca65/Asm.bnf")
 
     // optional, task-specific root for the generated files. Default: none
-    targetRoot = 'src/main/gen'
+    targetRootOutputDir = project.layout.buildDirectory.dir('gen')
 
     // path to a parser file, relative to the targetRoot
     pathToParser = '/org/ca65/AsmParser.java'
@@ -70,14 +71,16 @@ task generateAsmParser(type: GenerateParser) {
 
     // if set, plugin will remove a parser output file and psi output directory before generating new ones. Default: false
     purgeOldFiles = true
+
+    classpath = sourceSets.main.compileClasspath
 }
 
-task generateAsmLexer(type: GenerateLexer) {
+task generateAsmLexer(type: GenerateLexerTask) {
     // source flex file
-    source = "src/main/java/org/ca65/Asm.flex"
+    sourceFile = project.file("src/main/java/org/ca65/Asm.flex")
 
     // target directory for lexer
-    targetDir = "src/main/gen/org/ca65"
+    targetOutputDir = project.layout.buildDirectory.dir("gen/org/ca65")
 
     // target classname, target file will be targetDir/targetClass.java
     targetClass = "AsmLexer"
@@ -89,4 +92,5 @@ task generateAsmLexer(type: GenerateLexer) {
     purgeOldFiles = true
 }
 
-// defaultTasks 'clean' generateAsmLexer generateAsmParser
+// Ensure parser and lexer are generated before compilation
+compileJava.dependsOn generateAsmLexer, generateAsmParser
