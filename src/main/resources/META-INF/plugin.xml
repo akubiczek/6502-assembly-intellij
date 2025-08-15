@@ -21,7 +21,7 @@
   <depends>com.intellij.modules.platform</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <fileType name="Assembly file" implementationClass="org.ca65.AsmFileType" fieldName="INSTANCE"
+    <fileType name="6502 Assembly file" implementationClass="org.ca65.AsmFileType" fieldName="INSTANCE"
               language="6502 Assembly" extensions="s;asm;inc;mac"/>
     <lang.parserDefinition language="6502 Assembly"
                            implementationClass="org.ca65.AsmParserDefinition"/>
