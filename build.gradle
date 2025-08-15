@@ -1,15 +1,16 @@
 plugins {
     id 'java'
-    id "org.jetbrains.intellij.platform" version "2.7.1"
-    id "org.jetbrains.grammarkit" version "2022.3.2.2"
+    id 'org.jetbrains.intellij.platform' version '2.7.1'
+    id 'org.jetbrains.grammarkit' version '2022.3.2.2'
 }
 
-apply plugin: 'org.jetbrains.grammarkit'
-import org.jetbrains.grammarkit.tasks.*
+group = 'org.ca65'
+version = '1.8'
 
-group 'org.ca65'
-version '1.8'
-sourceCompatibility = 17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
@@ -18,27 +19,18 @@ repositories {
     }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java', 'build/gen']
-        }
-    }
-}
-
 dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    
+    testImplementation('junit:junit:4.13.2')
+
     intellijPlatform {
         create('IC', '2024.3.1')
-        
+
         pluginVerifier()
         zipSigner()
         instrumentationTools()
     }
 }
 
-// IntelliJ Platform Configuration
 intellijPlatform {
     pluginConfiguration {
         changeNotes = """This version adds a code formatter for 6502 assembly files.
@@ -47,7 +39,7 @@ This release also corrects an issue where square brackets, as used in some 65C81
 
 Line markers for branch instructions have been improved. 65C186 branch instructions are now recognised, and the plugin can now identify branches to unnamed labels, which are indicated with a different icon. Lastly, this version corrects a bug which prevented these line markers from appearing."""
     }
-    
+
     pluginVerification {
         ides {
             recommended()
@@ -55,42 +47,27 @@ Line markers for branch instructions have been improved. 65C186 branch instructi
     }
 }
 
-// Grammar Kit tasks
-task generateAsmParser(type: GenerateParserTask) {
-    // source bnf file
-    sourceFile = project.file("src/main/java/org/ca65/Asm.bnf")
+def generatedSourcesDir = layout.buildDirectory.dir('gen')
 
-    // optional, task-specific root for the generated files. Default: none
-    targetRootOutputDir = project.layout.buildDirectory.dir('gen')
-
-    // path to a parser file, relative to the targetRoot
-    pathToParser = '/org/ca65/AsmParser.java'
-
-    // path to a directory with generated psi files, relative to the targetRoot
-    pathToPsiRoot = '/org/ca65/psi'
-
-    // if set, plugin will remove a parser output file and psi output directory before generating new ones. Default: false
-    purgeOldFiles = true
-
-    classpath = sourceSets.main.compileClasspath
+tasks.register('generateAsmParser', org.jetbrains.grammarkit.tasks.GenerateParserTask) {
+    sourceFile.set(file("src/main/java/org/ca65/Asm.bnf"))
+    targetRootOutputDir.set(generatedSourcesDir)
+    pathToParser.set('org/ca65/AsmParser.java')
+    pathToPsiRoot.set('org/ca65/psi')
+    purgeOldFiles.set(true)
+    classpath.setFrom(sourceSets.main.compileClasspath)
 }
 
-task generateAsmLexer(type: GenerateLexerTask) {
-    // source flex file
-    sourceFile = project.file("src/main/java/org/ca65/Asm.flex")
-
-    // target directory for lexer
-    targetOutputDir = project.layout.buildDirectory.dir("gen/org/ca65")
-
-    // target classname, target file will be targetDir/targetClass.java
-    targetClass = "AsmLexer"
-
-    // optional, path to the task-specific skeleton file. Default: none
-    // skeleton = '/some/specific/skeleton'
-
-    // if set, plugin will remove a lexer output file before generating new one. Default: false
-    purgeOldFiles = true
+tasks.register('generateAsmLexer', org.jetbrains.grammarkit.tasks.GenerateLexerTask) {
+    sourceFile.set(file("src/main/java/org/ca65/Asm.flex"))
+    targetOutputDir.set(generatedSourcesDir.map { it.dir("org/ca65") })
+    targetClass.set("AsmLexer")
+    purgeOldFiles.set(true)
 }
 
-// Ensure parser and lexer are generated before compilation
-compileJava.dependsOn generateAsmLexer, generateAsmParser
+sourceSets.main {
+    java {
+        srcDir(tasks.named('generateAsmParser').flatMap { it.targetRootOutputDir })
+        srcDir(tasks.named('generateAsmLexer').flatMap { it.targetOutputDir })
+    }
+}
