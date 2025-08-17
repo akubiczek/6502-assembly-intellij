@@ -1,73 +1,74 @@
 <idea-plugin>
-  <id>org.ca65</id>
-  <name>6502 Assembly</name>
-  <version>1.0</version>
-  <vendor email="michael.billington@gmail.com" url="http://github.com/mike42">Michael Billington</vendor>
-
-  <description><![CDATA[
+    <id>eu.kubiczek.assembly6502</id>
+    <name>6502 Assembly CE</name>
+    <description><![CDATA[
       This plugin provides basic support for 6502 assembly language. It is suitable for projects which use the ca65 assembler to target the WDC 65c02, 65c816, and related microprocessors.
     ]]></description>
+    <version>1.8</version>
+    <vendor url="https://github.com/akubiczek/">Adam "Kubik" Kubiczek</vendor>
 
-  <change-notes><![CDATA[
-      Initial Release.
+    <change-notes><![CDATA[
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
-  <idea-version since-build="243.0"/>
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
+    <idea-version since-build="243.0"/>
 
-  <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
-       on how to target different products -->
-  <depends>com.intellij.modules.platform</depends>
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <fileType name="6502 Assembly file" implementationClass="org.ca65.AsmFileType" fieldName="INSTANCE"
-              language="6502 Assembly" extensions="s;asm;inc;mac"/>
-    <lang.parserDefinition language="6502 Assembly"
-                           implementationClass="org.ca65.AsmParserDefinition"/>
-    <lang.syntaxHighlighterFactory language="6502 Assembly"
-                                   implementationClass="org.ca65.AsmSyntaxHighlighterFactory"/>
-    <lang.psiStructureViewFactory language="6502 Assembly"
-                                  implementationClass="org.ca65.AsmStructureViewFactory"/>
-    <codeInsight.lineMarkerProvider language="6502 Assembly"
-                                    implementationClass="org.ca65.AsmLineMarkerProvider"/>
-    <lang.findUsagesProvider language="6502 Assembly"
-                             implementationClass="org.ca65.AsmFindUsagesProvider"/>
-    <gotoSymbolContributor
-            implementation="org.ca65.AsmChooseByNameContributor"/>
-    <lang.commenter language="6502 Assembly" implementationClass="org.ca65.AsmCommenter"/>
-    <lang.foldingBuilder language="6502 Assembly"
-                         implementationClass="org.ca65.AsmFoldingBuilder"/>
-    <lang.formatter
-            language="6502 Assembly"
-            implementationClass="org.ca65.formatting.AsmFormattingModelBuilder"/>
-    <completion.contributor language="6502 Assembly" implementationClass="org.ca65.AsmIdentifierCompletionContributor"/>
-    <completion.contributor language="6502 Assembly" implementationClass="org.ca65.AsmMnemonicCompletionContributor"/>
-    <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.UnsupportedMnemonicAnnotator"/>
-    <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmUnresolvedReferenceAnnotator"/>
-    <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmUnusedReferenceAnnotator"/>
-    <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmNumericLiteralAnnotator"/>
-    <projectService serviceImplementation="org.ca65.config.AsmConfiguration" />
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="6502 Assembly file" implementationClass="org.ca65.AsmFileType" fieldName="INSTANCE"
+                  language="6502 Assembly" extensions="s;asm;inc;mac"/>
+        <lang.parserDefinition language="6502 Assembly"
+                               implementationClass="org.ca65.AsmParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="6502 Assembly"
+                                       implementationClass="org.ca65.AsmSyntaxHighlighterFactory"/>
+        <lang.psiStructureViewFactory language="6502 Assembly"
+                                      implementationClass="org.ca65.AsmStructureViewFactory"/>
+        <codeInsight.lineMarkerProvider language="6502 Assembly"
+                                        implementationClass="org.ca65.AsmLineMarkerProvider"/>
+        <lang.findUsagesProvider language="6502 Assembly"
+                                 implementationClass="org.ca65.AsmFindUsagesProvider"/>
+        <gotoSymbolContributor
+                implementation="org.ca65.AsmChooseByNameContributor"/>
+        <lang.commenter language="6502 Assembly" implementationClass="org.ca65.AsmCommenter"/>
+        <lang.foldingBuilder language="6502 Assembly"
+                             implementationClass="org.ca65.AsmFoldingBuilder"/>
+        <lang.formatter
+                language="6502 Assembly"
+                implementationClass="org.ca65.formatting.AsmFormattingModelBuilder"/>
+        <completion.contributor language="6502 Assembly" implementationClass="org.ca65.AsmIdentifierCompletionContributor"/>
+        <completion.contributor language="6502 Assembly" implementationClass="org.ca65.AsmMnemonicCompletionContributor"/>
+        <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.UnsupportedMnemonicAnnotator"/>
+        <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmUnresolvedReferenceAnnotator"/>
+        <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmUnusedReferenceAnnotator"/>
+        <annotator language="6502 Assembly" implementationClass="org.ca65.annotator.AsmNumericLiteralAnnotator"/>
+        <projectService serviceImplementation="org.ca65.config.AsmConfiguration"/>
 
-    <intentionAction>
-      <className>org.ca65.action.ConvertNumberToHexadecimalIntentionAction</className>
-      <bundleName>messages.Asm6502Bundle</bundleName>
-      <categoryKey>INTN.category.asm6502</categoryKey>
-    </intentionAction>
-    <intentionAction>
-      <className>org.ca65.action.ConvertNumberToDecimalIntentionAction</className>
-      <bundleName>messages.Asm6502Bundle</bundleName>
-      <categoryKey>INTN.category.asm6502</categoryKey>
-    </intentionAction>
-    <intentionAction>
-      <className>org.ca65.action.ConvertNumberToBinaryIntentionAction</className>
-      <bundleName>messages.Asm6502Bundle</bundleName>
-      <categoryKey>INTN.category.asm6502</categoryKey>
-    </intentionAction>
-  </extensions>
+        <intentionAction>
+            <language>6502 Assembly</language>
+            <className>org.ca65.action.ConvertNumberToHexadecimalIntentionAction</className>
+            <bundleName>messages.Asm6502Bundle</bundleName>
+            <categoryKey>INTN.category.asm6502</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>6502 Assembly</language>
+            <className>org.ca65.action.ConvertNumberToDecimalIntentionAction</className>
+            <bundleName>messages.Asm6502Bundle</bundleName>
+            <categoryKey>INTN.category.asm6502</categoryKey>
+        </intentionAction>
+        <intentionAction>
+            <language>6502 Assembly</language>
+            <className>org.ca65.action.ConvertNumberToBinaryIntentionAction</className>
+            <bundleName>messages.Asm6502Bundle</bundleName>
+            <categoryKey>INTN.category.asm6502</categoryKey>
+        </intentionAction>
+    </extensions>
 
-  <actions>
-    <!-- Add your actions here -->
-  </actions>
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
 
 </idea-plugin>

@@ -4,7 +4,7 @@ plugins {
     id 'org.jetbrains.grammarkit' version '2022.3.2.2'
 }
 
-group = 'org.ca65'
+group = 'eu.kubiczek'
 version = '1.8'
 
 java {
@@ -33,11 +33,8 @@ dependencies {
 
 intellijPlatform {
     pluginConfiguration {
-        changeNotes = """This version adds a code formatter for 6502 assembly files.
-
-This release also corrects an issue where square brackets, as used in some 65C816 long addressing modes, were being treated as a syntax error.
-
-Line markers for branch instructions have been improved. 65C186 branch instructions are now recognised, and the plugin can now identify branches to unnamed labels, which are indicated with a different icon. Lastly, this version corrects a bug which prevented these line markers from appearing."""
+        changeNotes = """The plugin is now compatible with CLion. It also searches for symbol definitions (e.g., labels) in included files.
+"""
     }
 
     pluginVerification {

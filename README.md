@@ -20,9 +20,13 @@ This is plugin for JetBrains IDE's, which provides basic support for 6502 assemb
 
 This plugin may be installed via the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/16799-6502-assembly).
 
+## Fork Information
+
+This is a fork of the original [6502 Assembly Plugin for IntelliJ](https://github.com/mike42/6502-assembly-intellij) by Michael Billington. The original project appears to be inactive, and this fork aims to continue its development by fixing bugs, updating dependencies, and adding new features.
+
 ## License
 
-This plugin is copyright 2021-2022 Michael Billington, and may be used, distributed and modified under the terms of the MIT license. See [LICENSE](https://github.com/mike42/6502-assembly-intellij/blob/master/LICENSE) for details.
+This plugin is based on the original work of Michael Billington (copyright 2021-2022). Modifications and further development are copyright 2025 Adam "Kubik" Kubiczek. The entire project is distributed under the terms of the MIT license. See [LICENSE](https://github.com/mike42/6502-assembly-intellij/blob/master/LICENSE) for details.
 
 The parser/lexer were built with reference to the [ca65 assembler](https://github.com/cc65/cc65) source code (zlib License), while the icons are derived from those bundled with [JetBrains/intellij-community](https://github.com/JetBrains/intellij-community) (Apache License).
 
